@@ -24,6 +24,11 @@ public class Admin extends User {
         }
     }
 
+    public void addStudent(){}
+    public void removeStudent(){}
+    public void addTeacher(){}
+    public void removeTeacher(){}
+
     public String toString() {
         return "Admin { id = " + super.getId() +
                 ", name = " + super.getName() +

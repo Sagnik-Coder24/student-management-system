@@ -17,6 +17,10 @@ public class Student extends User {
         this(id, name, age, grade, null);
     }
 
+    public Student(long id, String name, int age) {
+        this(id, name, age, 0.0);
+    }
+
     public double getGrade() {
         return grade;
     }
@@ -39,7 +43,7 @@ public class Student extends User {
     }
 
     public void addCourse(Course course) {
-        if (courses.contains(course))
+        if (!courses.contains(course))
             courses.add(course);
     }
 
@@ -55,7 +59,6 @@ public class Student extends User {
         return "Student { id = " + super.getId() +
                 ", name = " + super.getName() +
                 ", age = " + super.getAge() +
-                ", grade = " + grade +
-                ", courses = " + courses + " }";
+                ", grade = " + grade + " }";
     }
 }

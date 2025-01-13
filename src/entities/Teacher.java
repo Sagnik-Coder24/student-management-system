@@ -25,7 +25,7 @@ public class Teacher extends User {
     }
 
     public void addCourse(Course course) {
-        if (courses.contains(course))
+        if (!courses.contains(course))
             courses.add(course);
     }
 
@@ -38,10 +38,17 @@ public class Teacher extends User {
         }
     }
 
+    public void assignGrade(Student st, double grade){
+        System.out.println("lol");
+    }
+
+    public void conductExam(){
+        System.out.println("The exam has started. All the best.");
+    }
+
     public String toString() {
         return "Teacher { id = " + super.getId() +
                 ", name = " + super.getName() +
-                ", age = " + super.getAge() +
-                ", courses = " + courses + " }";
+                ", age = " + super.getAge() + " }";
     }
 }

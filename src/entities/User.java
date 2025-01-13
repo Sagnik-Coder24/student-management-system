@@ -39,4 +39,8 @@ public class User {
         }
     }
 
+    public void printDetails() {
+        System.out.println("The details are: ( " + "id = " + id + ", name = '" + name + '\'' + ", age = " + age + " )");
+    }
+
 }
