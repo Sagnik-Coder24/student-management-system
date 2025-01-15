@@ -6,38 +6,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TeacherRepo implements Repository<Teacher> {
-
-    private static TeacherRepo instance;
-    private final Map<Long, Teacher> allTeachers = new HashMap<>();
-
+public class TeacherRepo {
     private TeacherRepo() {
     }
 
-    public static TeacherRepo getInstance() {
-        if (instance == null) {
-            instance = new TeacherRepo();
-        }
-        return instance;
-    }
+    private static final Map<Long, Teacher> allTeachers = new HashMap<>();
 
-    @Override
-    public void addElement(Teacher obj) {
+    public static void addElement(Teacher obj) {
         allTeachers.put(obj.getId(), obj);
     }
 
-    @Override
-    public void addElements(List<Teacher> objs) {
-        objs.forEach(this::addElement);
+    public static void addElements(List<Teacher> objs) {
+        objs.forEach(TeacherRepo::addElement);
     }
 
-    @Override
-    public void removeElement(long id) {
+    public static void removeElement(long id) {
         allTeachers.remove(id);
     }
 
-    @Override
-    public void displayElements() {
+    public static void displayElements() {
         System.out.println("All the students are displayed below:");
         allTeachers.forEach((key, value) -> System.out.println("> " + key + " : " + value));
     }

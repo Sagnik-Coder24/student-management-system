@@ -9,7 +9,7 @@ public class Student extends User {
 
     public Student(long id, String name, int age, double grade, List<Course> courses) {
         super(id, name, age);
-        setGrade(grade);
+        this.grade = grade;
         setCourses(courses);
     }
 
@@ -18,18 +18,21 @@ public class Student extends User {
     }
 
     public Student(long id, String name, int age) {
-        this(id, name, age, 0.0);
+        this(id, name, age, -1);
     }
 
-    public double getGrade() {
-        return grade;
+    public String getGrade() {
+        if (grade == -1) {
+            return ("Grades not assigned for this particular student.");
+        } else
+            return String.valueOf(grade);
     }
 
     public void setGrade(double grade) {
         if (grade >= 0) {
             this.grade = grade;
         } else {
-            throw new IllegalArgumentException("Grade should be greater than 0.");
+            System.out.println("Grade should be greater than or equal to 0.");
         }
     }
 
@@ -59,6 +62,6 @@ public class Student extends User {
         return "Student { id = " + super.getId() +
                 ", name = " + super.getName() +
                 ", age = " + super.getAge() +
-                ", grade = " + grade + " }";
+                ", grade = " + getGrade() + " }";
     }
 }

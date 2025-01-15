@@ -39,7 +39,7 @@ public class Teacher extends User {
     }
 
     public void assignGrade(Student st, double grade){
-        System.out.println("lol");
+        st.setGrade(grade);
     }
 
     public void conductExam(){
