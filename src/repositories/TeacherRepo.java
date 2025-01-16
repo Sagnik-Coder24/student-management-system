@@ -39,6 +39,10 @@ public class TeacherRepo {
         return allTeachers.isEmpty();
     }
 
+    public static Teacher getTeacher(long id){
+        return allTeachers.get(id);
+    }
+
     public static void displayElements() {
         if (TeacherRepo.isEmpty()) {
             System.out.println("\nThere are currently no teachers in the system.");

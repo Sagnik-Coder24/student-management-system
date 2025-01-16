@@ -46,7 +46,11 @@ public class Admin extends User {
         else return false;
     }
 
-    public void updatePassword(String password) {
+    public void updatePassword() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nEnter new password.");
+        String password = sc.nextLine();
+
         if (password == null) {
             System.out.println("Password cannot be null.");
         } else if (password.isEmpty()) {
@@ -80,9 +84,23 @@ public class Admin extends User {
     }
 
     public void addTeacher() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nEnter the details of the new teacher.");
+        System.out.println("Enter name:");
+        String name = sc.nextLine();
+        System.out.println("enter age:");
+        int age = sc.nextInt();
+        sc.nextLine();
+        Teacher newT = new Teacher(IDgenerator.getNewId(), name, age);
+        TeacherRepo.addElement(newT);
     }
 
     public void removeTeacher() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nEnter the id of the teacher to remove.");
+        long id = sc.nextLong();
+        sc.nextLine();
+        TeacherRepo.removeElement(id);
     }
 
     public void listStudents() {

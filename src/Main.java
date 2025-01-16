@@ -1,5 +1,6 @@
 import entities.*;
 import repositories.StudentRepo;
+import repositories.TeacherRepo;
 import utility.IDgenerator;
 
 import java.util.ArrayList;
@@ -11,6 +12,47 @@ public class Main {
     }
 
     private static void teacher_called() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\nHey, welcome to our teacher's section. Please enter your ID to proceed.");
+        long id = scanner.nextLong();
+        scanner.nextLine();
+        if (TeacherRepo.containsID(id)) {
+            Teacher teacher = TeacherRepo.getTeacher(id);
+            System.out.println("\n\nWelcome, " + teacher.getName() + ".");
+
+            int user_ip;
+            do {
+
+                System.out.println("\nSelect one of the below operations to perform:");
+                System.out.println("1 > Add course");
+                System.out.println("2 > Remove course");
+                System.out.println("3 > Add Teacher");
+                System.out.println("4 > Remove Student");
+                System.out.println("5 > Update your password");
+                System.out.println("6 > See your details");
+                System.out.println("7 > List of all students");
+                System.out.println("8 > List of all teachers");
+                System.out.println("9 > List of all courses");
+                System.out.println("0 > Go Back");
+                user_ip = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (user_ip) {
+                    case 1:
+                        break;
+                    case 0:
+                        System.out.println("Going back to the previous menu...");
+                        return;
+                    default:
+                        System.out.println("Invalid input.. Please select a valid option.");
+                        break;
+                }
+
+
+            } while (true);
+        } else {
+            System.out.println("There are no teachers with ID: \" + id + \" present in our system.");
+        }
     }
 
     private static void admin_called() {
@@ -70,9 +112,7 @@ public class Main {
                         admin.removeTeacher();
                         break;
                     case 5:
-                        System.out.println("\nEnter new password.");
-                        String ps = scanner.nextLine();
-                        admin.updatePassword(ps);
+                        admin.updatePassword();
                         break;
                     case 6:
                         System.out.println();

@@ -1,7 +1,5 @@
 package entities;
 
-import java.util.Map;
-
 public class User {
     private long id;
     private String name;
@@ -40,8 +38,6 @@ public class User {
             throw new IllegalArgumentException("Entered age is not valid.");
         }
     }
-
-    public static void createUser(){}
 
     public void printDetails() {
         System.out.println("The details are: ( " + "id = " + id + ", name = '" + name + '\'' + ", age = " + age + " )");
