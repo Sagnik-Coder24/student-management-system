@@ -49,7 +49,10 @@ public class Main {
                 System.out.println("4 > Remove Student");
                 System.out.println("5 > Update your password");
                 System.out.println("6 > See your details");
-                System.out.println("7 > Go Back");
+                System.out.println("7 > List of all students");
+                System.out.println("8 > List of all teachers");
+                System.out.println("9 > List of all courses");
+                System.out.println("0 > Go Back");
                 user_ip = scanner.nextInt();
                 scanner.nextLine();
 
@@ -76,6 +79,15 @@ public class Main {
                         admin.printDetails();
                         break;
                     case 7:
+                        admin.listStudents();
+                        break;
+                    case 8:
+                        admin.listTeachers();
+                        break;
+                    case 9:
+                        admin.listCourses();
+                        break;
+                    case 0:
                         System.out.println("Going back to the previous menu...");
                         return;
                     default:
@@ -84,7 +96,7 @@ public class Main {
                 }
 
 
-            } while (user_ip != 7);
+            } while (true);
 
         } else {
             System.out.println("\n( ADMIN ) It seems you are new here. Please create your profile.");

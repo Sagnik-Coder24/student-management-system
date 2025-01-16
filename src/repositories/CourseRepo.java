@@ -24,9 +24,17 @@ public class CourseRepo {
         allCourses.remove(id);
     }
 
+    public static boolean isEmpty() {
+        return allCourses.isEmpty();
+    }
+
     public static void displayElements() {
-        System.out.println("All the students are displayed below:");
-        allCourses.forEach((key, value) -> System.out.println("> " + key + " : " + value));
+        if (CourseRepo.isEmpty()) {
+            System.out.println("\nThere are currently no courses in the system.");
+        } else {
+            System.out.println("\nAll the courses are displayed below:");
+            allCourses.forEach((key, value) -> System.out.println("> " + key + " : " + value));
+        }
     }
 
 }

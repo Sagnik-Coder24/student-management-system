@@ -2,6 +2,7 @@ package entities;
 
 import repositories.CourseRepo;
 import repositories.StudentRepo;
+import repositories.TeacherRepo;
 import utility.IDgenerator;
 
 import java.util.Scanner;
@@ -71,12 +72,29 @@ public class Admin extends User {
     }
 
     public void removeStudent() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\nEnter the id of the student to remove.");
+        long id = sc.nextLong();
+        sc.nextLine();
+        StudentRepo.removeElement(id);
     }
 
     public void addTeacher() {
     }
 
     public void removeTeacher() {
+    }
+
+    public void listStudents() {
+        StudentRepo.displayElements();
+    }
+
+    public void listTeachers() {
+        TeacherRepo.displayElements();
+    }
+
+    public void listCourses() {
+        CourseRepo.displayElements();
     }
 
     public String toString() {
