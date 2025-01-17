@@ -1,6 +1,7 @@
 package repositories;
 
 import entities.Course;
+import entities.Teacher;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +25,16 @@ public class CourseRepo {
         allCourses.remove(id);
     }
 
+    public static boolean containsCode(long code) {
+        return allCourses.containsKey(code);
+    }
+
     public static boolean isEmpty() {
         return allCourses.isEmpty();
+    }
+
+    public static Course getCourse(long code) {
+        return allCourses.get(code);
     }
 
     public static void displayElements() {

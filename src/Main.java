@@ -1,7 +1,9 @@
 import entities.*;
+import repositories.CourseRepo;
 import repositories.StudentRepo;
 import repositories.TeacherRepo;
 import utility.IDgenerator;
+import utility.Relationships;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,25 +22,88 @@ public class Main {
             Teacher teacher = TeacherRepo.getTeacher(id);
             System.out.println("\n\nWelcome, " + teacher.getName() + ".");
 
+            if (teacher.getCourses() == null || teacher.getCourses().isEmpty()) {
+                System.out.println("Your specialized courses are not yet set. Please add them.");
+                int user_ip = 1;
+                do {
+                    switch (user_ip) {
+                        case 1:
+                            Relationships.teacherAddingCourse(teacher);
+                            break;
+                        case 2:
+                            System.out.println("Thank you for adding...");
+                            break;
+                        default:
+                            System.out.println("Invalid input.. Please select a valid option.");
+                            break;
+                    }
+                    System.out.println("\nSelect one option.\n1 > Add another specialized course\n2 > Exit");
+                    user_ip = scanner.nextInt();
+                    scanner.nextLine();
+                } while (user_ip != 2);
+            }
+
             int user_ip;
             do {
 
                 System.out.println("\nSelect one of the below operations to perform:");
                 System.out.println("1 > Add course");
                 System.out.println("2 > Remove course");
-                System.out.println("3 > Add Teacher");
-                System.out.println("4 > Remove Student");
-                System.out.println("5 > Update your password");
+                System.out.println("3 > Assign course to a student");
+                System.out.println("4 > Remove course for a student");
+                System.out.println("5 > Assign grades to a student.");
                 System.out.println("6 > See your details");
-                System.out.println("7 > List of all students");
-                System.out.println("8 > List of all teachers");
-                System.out.println("9 > List of all courses");
+                System.out.println("7 > Update your details");
+                System.out.println("8 > List of all students");
+                System.out.println("9 > List of all teachers");
+                System.out.println("10 > List of all courses");
                 System.out.println("0 > Go Back");
                 user_ip = scanner.nextInt();
                 scanner.nextLine();
 
                 switch (user_ip) {
                     case 1:
+                        System.out.println("\nEnter course code:");
+                        long code = scanner.nextLong();
+                        scanner.nextLine();
+                        if (CourseRepo.containsCode(code)) {
+                            Course course = CourseRepo.getCourse(code);
+                            System.out.println("Course - " + course.getName() + " already present in our system.");
+                        } else {
+                            System.out.println("Enter course name:");
+                            String name = scanner.nextLine();
+                            Course course = new Course(code, name);
+                            CourseRepo.addElement(course);
+                            System.out.println("Course - " + course.getName() + " has been added in our system.");
+                        }
+                        break;
+                    case 2:
+                        System.out.println("\nEnter course code:");
+                        long code2 = scanner.nextLong();
+                        scanner.nextLine();
+                        if (CourseRepo.containsCode(code2)) {
+                            String name = CourseRepo.getCourse(code2).getName();
+                            CourseRepo.removeElement(code2);
+                            System.out.println("Course - " + name + " has been removed from our system.");
+                        } else {
+                            System.out.println("Course with ID: " + code2 + " not present in our system.");
+                        }
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;
+                    case 10:
                         break;
                     case 0:
                         System.out.println("Going back to the previous menu...");
@@ -51,7 +116,7 @@ public class Main {
 
             } while (true);
         } else {
-            System.out.println("There are no teachers with ID: \" + id + \" present in our system.");
+            System.out.println("There are no teachers with ID: " + id + " present in our system.");
         }
     }
 
