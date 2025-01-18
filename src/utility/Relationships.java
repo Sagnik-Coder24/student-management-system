@@ -18,6 +18,11 @@ public class Relationships {
         course.addStudent(student);
     }
 
+    public static void removeStudentCourse(Student student, Course course) {
+        student.removeCourse(course.getCode());
+        course.removeStudent(student.getId());
+    }
+
     public static void teacherAddingCourse(Teacher teacher) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter course code:");
@@ -25,7 +30,7 @@ public class Relationships {
         scanner.nextLine();
         if (CourseRepo.containsCode(code)) {
             Course course = CourseRepo.getCourse(code);
-            if (teacher.getCourses().contains(course)){
+            if (teacher.getCourses().contains(course)) {
                 System.out.println("Course - " + course.getName() + " already present.");
                 return;
             }

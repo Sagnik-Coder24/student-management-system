@@ -26,27 +26,22 @@ public class Main {
                 System.out.println("Your specialized courses are not yet set. Please add them.");
                 int user_ip = 1;
                 do {
-                    switch (user_ip) {
-                        case 1:
-                            Relationships.teacherAddingCourse(teacher);
-                            break;
-                        case 2:
-                            System.out.println("Thank you for adding...");
-                            break;
-                        default:
-                            System.out.println("Invalid input.. Please select a valid option.");
-                            break;
+                    if (user_ip == 1) {
+                        Relationships.teacherAddingCourse(teacher);
+                    } else {
+                        System.out.println("Invalid input.. Please select a valid option.");
                     }
                     System.out.println("\nSelect one option.\n1 > Add another specialized course\n2 > Exit");
                     user_ip = scanner.nextInt();
                     scanner.nextLine();
+                    if (user_ip == 2) System.out.println("Thank you for adding...");
                 } while (user_ip != 2);
             }
 
             int user_ip;
             do {
 
-                System.out.println("\nSelect one of the below operations to perform:");
+                System.out.println("\n\nSelect one of the below operations to perform:");
                 System.out.println("1 > Add course");
                 System.out.println("2 > Remove course");
                 System.out.println("3 > Assign course to a student");
@@ -99,14 +94,19 @@ public class Main {
                         teacher.assignGrade();
                         break;
                     case 6:
+                        teacher.printDetails();
                         break;
                     case 7:
+                        teacher.updateDetails();
                         break;
                     case 8:
+                        teacher.listStudents();
                         break;
                     case 9:
+                        teacher.listTeachers();
                         break;
                     case 10:
+                        teacher.listCourses();
                         break;
                     case 0:
                         System.out.println("Going back to the previous menu...");
@@ -138,9 +138,9 @@ public class Main {
 
                 pass = scanner.nextLine();
                 if (admin.checkPassMatch(pass)) {
-                    System.out.println("\nCorrect password.");
+                    System.out.println("Correct password.");
                 } else {
-                    System.out.println("\nWrong password." +
+                    System.out.println("Wrong password." +
                             (counter > 1 ? " Try again!" : "") +
                             " ( " + (counter - 1) + " attempts remaining. )");
                     counter--;
@@ -156,7 +156,7 @@ public class Main {
                 System.out.println("1 > Add Student");
                 System.out.println("2 > Remove Student");
                 System.out.println("3 > Add Teacher");
-                System.out.println("4 > Remove Student");
+                System.out.println("4 > Remove Teacher");
                 System.out.println("5 > Update your password");
                 System.out.println("6 > See your details");
                 System.out.println("7 > List of all students");

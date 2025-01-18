@@ -21,11 +21,8 @@ public class Student extends User {
         this(id, name, age, -1);
     }
 
-    public String getGrade() {
-        if (grade == -1) {
-            return ("Grades not assigned for this particular student.");
-        } else
-            return String.valueOf(grade);
+    public double getGrade() {
+        return grade;
     }
 
     public void setGrade(double grade) {
@@ -62,6 +59,8 @@ public class Student extends User {
         return "Student { id = " + super.getId() +
                 ", name = " + super.getName() +
                 ", age = " + super.getAge() +
-                ", grade = " + getGrade() + " }";
+                ", grade = " +
+                (getGrade() == -1 ? "Grades not assigned for this particular student." : getGrade())
+                + " }";
     }
 }

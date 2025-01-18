@@ -35,12 +35,12 @@ public class User {
         if (age > 0 && age <= 100) {
             this.age = age;
         } else {
-            throw new IllegalArgumentException("Entered age is not valid.");
+            System.out.println("Entered age is not valid.");
         }
     }
 
     public void printDetails() {
-        System.out.println("The details are: ( " + "id = " + id + ", name = '" + name + '\'' + ", age = " + age + " )");
+        System.out.println("The user details are: ( " + "id = " + id + ", name = '" + name + '\'' + ", age = " + age + " )");
     }
 
 }
