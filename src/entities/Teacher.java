@@ -1,7 +1,12 @@
 package entities;
 
+import repositories.CourseRepo;
+import repositories.StudentRepo;
+import utility.Relationships;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Teacher extends User {
     private List<Course> courses = new ArrayList<>();
@@ -38,12 +43,63 @@ public class Teacher extends User {
         }
     }
 
-    public void assignGrade(Student st, double grade){
-        st.setGrade(grade);
+    public void assignGrade() {
+
     }
 
-    public void conductExam(){
+    public void conductExam() {
         System.out.println("The exam has started. All the best.");
+    }
+
+    public void assignCourse() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter student ID:");
+        long id = scanner.nextLong();
+        scanner.nextLine();
+        if (StudentRepo.containsID(id)) {
+            Student student = StudentRepo.getStudent(id);
+            System.out.println("Enter course CODE:");
+            long code = scanner.nextLong();
+            scanner.nextLine();
+            Course course;
+            if (CourseRepo.containsCode(code)) {
+                course = CourseRepo.getCourse(code);
+                Relationships.studentCourse(student, course);
+            } else {
+                System.out.println("Course with CODE: " + code + " is not present in our system. Please add it.");
+                System.out.println("Enter course name:");
+                String name = scanner.nextLine();
+                course = new Course(code, name);
+                CourseRepo.addElement(course);
+                System.out.println("Course - " + course.getName() + " has been added in our system.");
+                Relationships.studentCourse(student, course);
+            }
+            System.out.println("Course - " + course.getName() + " has been added for student - " + student.getName() + ".");
+        } else {
+            System.out.println("Student with ID: " + id + " is not present in our system.");
+        }
+    }
+
+    public void deleteStudentCourse() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter student ID:");
+        long id = scanner.nextLong();
+        scanner.nextLine();
+        if (StudentRepo.containsID(id)) {
+            Student student = StudentRepo.getStudent(id);
+            System.out.println("Enter course CODE:");
+            long code = scanner.nextLong();
+            scanner.nextLine();
+            if (student.getCourses().stream().anyMatch(course -> course.getCode() == code)) {
+                student.removeCourse(code);
+                Course course = CourseRepo.getCourse(code);
+                System.out.println("Course - " + course.getName() + " has been added for student - " + student.getName() + ".");
+            } else {
+                System.out.println("Course with CODE: " + code + " is not assigned to student: " + student.getName() + ".");
+            }
+        } else {
+            System.out.println("Student with ID: " + id + " is not present in our system.");
+        }
     }
 
     public String toString() {

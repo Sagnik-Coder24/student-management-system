@@ -86,14 +86,17 @@ public class Main {
                             CourseRepo.removeElement(code2);
                             System.out.println("Course - " + name + " has been removed from our system.");
                         } else {
-                            System.out.println("Course with ID: " + code2 + " not present in our system.");
+                            System.out.println("Course with CODE: " + code2 + " is not present in our system.");
                         }
                         break;
                     case 3:
+                        teacher.assignCourse();
                         break;
                     case 4:
+                        teacher.deleteStudentCourse();
                         break;
                     case 5:
+                        teacher.assignGrade();
                         break;
                     case 6:
                         break;

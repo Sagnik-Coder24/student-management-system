@@ -14,7 +14,8 @@ public class Relationships {
     }
 
     public static void studentCourse(Student student, Course course) {
-
+        student.addCourse(course);
+        course.addStudent(student);
     }
 
     public static void teacherAddingCourse(Teacher teacher) {

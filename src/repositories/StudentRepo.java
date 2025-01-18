@@ -1,6 +1,7 @@
 package repositories;
 
 import entities.Student;
+import entities.Teacher;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,10 @@ public class StudentRepo {
 
     public static boolean isEmpty() {
         return allStudents.isEmpty();
+    }
+
+    public static Student getStudent(long id){
+        return allStudents.get(id);
     }
 
     public static void displayElements() {
