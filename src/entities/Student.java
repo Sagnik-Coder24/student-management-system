@@ -1,7 +1,9 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Student extends User {
     private double grade;
@@ -50,7 +52,10 @@ public class Student extends User {
     public void removeCourse(long code) {
         long count = courses.stream().filter(course -> course.getCode() == code).count();
         if (count > 0) {
-            courses = courses.stream().filter(course -> course.getCode() == code).toList();
+            courses = courses
+                    .stream()
+                    .filter(course -> course.getCode() != code)
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
     }
 

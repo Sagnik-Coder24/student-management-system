@@ -2,6 +2,7 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Course {
 
@@ -60,7 +61,7 @@ public class Course {
     public void removeTeacher(long id) {
         long count = teachers.stream().filter(teacher -> teacher.getId() == id).count();
         if (count > 0) {
-            teachers = teachers.stream().filter(teacher -> teacher.getId() != id).toList();
+            teachers = teachers.stream().filter(teacher -> teacher.getId() != id).collect(Collectors.toCollection(ArrayList::new));
         } else {
             System.out.println("No teacher found with ID: " + id);
         }
@@ -85,7 +86,7 @@ public class Course {
     public void removeStudent(long id) {
         long count = students.stream().filter(student -> student.getId() == id).count();
         if (count > 0) {
-            students = students.stream().filter(student -> student.getId() != id).toList();
+            students = students.stream().filter(student -> student.getId() != id).collect(Collectors.toCollection(ArrayList::new));
         } else {
             System.out.println("No student found with ID: " + id);
         }

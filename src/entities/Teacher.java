@@ -8,6 +8,7 @@ import utility.Relationships;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Teacher extends User {
     private List<Course> courses = new ArrayList<>();
@@ -38,7 +39,10 @@ public class Teacher extends User {
     public void removeCourse(long code) {
         long count = courses.stream().filter(course -> course.getCode() == code).count();
         if (count > 0) {
-            courses = courses.stream().filter(course -> course.getCode() == code).toList();
+            courses = courses
+                    .stream()
+                    .filter(course -> course.getCode() == code)
+                    .collect(Collectors.toCollection(ArrayList::new));
             System.out.println("Course removed.");
         } else {
             System.out.println("No course found with CODE: " + code);
