@@ -1,5 +1,9 @@
 package entities;
 
+import utility.NameValidator;
+
+import java.util.Scanner;
+
 public class User {
     private long id;
     private String name;
@@ -36,6 +40,19 @@ public class User {
             this.age = age;
         } else {
             System.out.println("Entered age is not valid.");
+        }
+    }
+
+    public void updateName() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter new name:");
+        String name = scanner.nextLine();
+        if (NameValidator.isValidName(name)) {
+            this.setName(NameValidator.formatName(name));
+            System.out.println("Name updated, " + this.getName());
+        } else {
+            System.out.println("Name: " + name + " is not valid. Please try again.\n");
+            updateName();
         }
     }
 

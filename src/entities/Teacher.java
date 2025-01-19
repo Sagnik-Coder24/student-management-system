@@ -3,6 +3,7 @@ package entities;
 import repositories.CourseRepo;
 import repositories.StudentRepo;
 import repositories.TeacherRepo;
+import utility.NameValidator;
 import utility.Relationships;
 
 import java.util.ArrayList;
@@ -37,16 +38,16 @@ public class Teacher extends User {
     }
 
     public void removeCourse(long code) {
-        long count = courses.stream().filter(course -> course.getCode() == code).count();
-        if (count > 0) {
+        if (this.isCourseCodePresent(code)) {
             courses = courses
                     .stream()
-                    .filter(course -> course.getCode() == code)
+                    .filter(course -> course.getCode() != code)
                     .collect(Collectors.toCollection(ArrayList::new));
-            System.out.println("Course removed.");
-        } else {
-            System.out.println("No course found with CODE: " + code);
         }
+    }
+
+    public boolean isCourseCodePresent(long code) {
+        return this.getCourses().stream().anyMatch(course -> course.getCode() == code);
     }
 
     public void listStudents() {
@@ -59,6 +60,41 @@ public class Teacher extends User {
 
     public void listCourses() {
         CourseRepo.displayElements();
+    }
+
+    public void deleteCourseFromSystem() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\nEnter course code:");
+        long code = scanner.nextLong();
+        scanner.nextLine();
+        if (CourseRepo.containsCode(code)) {
+            Course course = CourseRepo.getCourse(code);
+            System.out.println("---------------------------------------------------");
+            System.out.println("Please review the below details:");
+            System.out.println("Teachers associates with this course: " + course.getTeachers());
+            System.out.println("Students associates with this course: " + course.getStudents());
+            System.out.println("\nDo you wish to continue? ( Y / N )");
+            System.out.println("---------------------------------------------------");
+            String input = scanner.nextLine();
+            char ch = input.toLowerCase().charAt(0);
+            if (ch == 'y') {
+                for (Teacher teacher : course.getTeachers()) {
+                    teacher.removeCourse(code);
+                    System.out.println("Course - " + course.getName() + " removed from teacher - " + teacher.getName() + ".");
+                }
+                for (Student student : course.getStudents()) {
+                    student.removeCourse(code);
+                    System.out.println("Course - " + course.getName() + " removed from student - " + student.getName() + ".");
+
+                }
+                CourseRepo.removeElement(code);
+                System.out.println("\nCourse - " + course.getName() + " has been removed from our system.");
+            } else {
+                System.out.println("Going back...");
+            }
+        } else {
+            System.out.println("Course with CODE: " + code + " is not present in our system.");
+        }
     }
 
     public void assignGrade() {
@@ -160,10 +196,7 @@ public class Teacher extends User {
             scanner.nextLine();
             switch (user_ip) {
                 case 1:
-                    System.out.println("Enter new name:");
-                    String name = scanner.nextLine();
-                    this.setName(name);
-                    System.out.println("Name updated, " + this.getName());
+                    this.updateName();
                     break;
                 case 2:
                     System.out.println("Enter new age:");
@@ -179,7 +212,12 @@ public class Teacher extends User {
                     System.out.println("Enter course code:");
                     long code = scanner.nextLong();
                     scanner.nextLine();
-                    this.removeCourse(code);
+                    if (this.isCourseCodePresent(code)) {
+                        this.removeCourse(code);
+                        System.out.println("Course CODE: - " + code + " has been removed.");
+                    } else {
+                        System.out.println("Course CODE: - " + code + " is not present.");
+                    }
                     break;
                 case 0:
                     System.out.println("Going back to the previous menu...");

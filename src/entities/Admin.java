@@ -4,6 +4,7 @@ import repositories.CourseRepo;
 import repositories.StudentRepo;
 import repositories.TeacherRepo;
 import utility.IDgenerator;
+import utility.NameValidator;
 
 import java.util.Scanner;
 
@@ -68,11 +69,17 @@ public class Admin extends User {
         System.out.println("\nEnter the details of the new student.");
         System.out.println("Enter name:");
         String name = sc.nextLine();
-        System.out.println("enter age:");
-        int age = sc.nextInt();
-        sc.nextLine();
-        Student newSt = new Student(IDgenerator.getNewId(), name, age);
-        StudentRepo.addElement(newSt);
+        if (NameValidator.isValidName(name)) {
+            System.out.println("enter age:");
+            int age = sc.nextInt();
+            sc.nextLine();
+            Student newSt = new Student(IDgenerator.getNewId(), NameValidator.formatName(name), age);
+            StudentRepo.addElement(newSt);
+        } else {
+            System.out.println("Name: " + name + " is not valid. Please try again.\n");
+            addStudent();
+        }
+
     }
 
     public void removeStudent() {
@@ -88,11 +95,17 @@ public class Admin extends User {
         System.out.println("\nEnter the details of the new teacher.");
         System.out.println("Enter name:");
         String name = sc.nextLine();
-        System.out.println("enter age:");
-        int age = sc.nextInt();
-        sc.nextLine();
-        Teacher newT = new Teacher(IDgenerator.getNewId(), name, age);
-        TeacherRepo.addElement(newT);
+        if (NameValidator.isValidName(name)) {
+            System.out.println("enter age:");
+            int age = sc.nextInt();
+            sc.nextLine();
+            Teacher newT = new Teacher(IDgenerator.getNewId(), name, age);
+            TeacherRepo.addElement(newT);
+        } else {
+            System.out.println("Name: " + name + " is not valid. Please try again.\n");
+            addTeacher();
+        }
+
     }
 
     public void removeTeacher() {

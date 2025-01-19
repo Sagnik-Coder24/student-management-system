@@ -1,13 +1,62 @@
 import entities.*;
 import repositories.CourseRepo;
+import repositories.StudentRepo;
 import repositories.TeacherRepo;
 import utility.IDgenerator;
+import utility.NameValidator;
 import utility.Relationships;
 
 import java.util.Scanner;
 
 public class Main {
     private static void student_called() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\nHey, welcome to our student's section. Please enter your ID to proceed.");
+        long id = scanner.nextLong();
+        scanner.nextLine();
+        if (StudentRepo.containsID(id)) {
+            Student student = StudentRepo.getStudent(id);
+            System.out.println("\n\nWelcome, " + student.getName() + ".");
+
+            int user_ip;
+            do {
+                System.out.println("\n\nSelect one of the below operations to perform:");
+                System.out.println("1 > See your details");
+                System.out.println("2 > Update your name");
+                System.out.println("3 > Update your age");
+                System.out.println("4 > Check your grade");
+                System.out.println("0 > Go Back");
+                user_ip = scanner.nextInt();
+                scanner.nextLine();
+
+                switch (user_ip) {
+                    case 1:
+                        student.printDetails();
+                        break;
+                    case 2:
+                        student.updateName();
+                        break;
+                    case 3:
+                        System.out.println("Enter new age:");
+                        int age = scanner.nextInt();
+                        scanner.nextLine();
+                        student.setAge(age);
+                        System.out.println("Age updated, " + student.getAge());
+                        break;
+                    case 4:
+                        System.out.println(student.getGrade() == -1 ? "Grades not assigned for you." : student.getGrade());
+                        break;
+                    case 0:
+                        System.out.println("Going back to the previous menu...");
+                        return;
+                    default:
+                        System.out.println("Invalid input.. Please select a valid option.");
+                        break;
+                }
+            } while (true);
+        } else {
+            System.out.println("There are no students with ID: " + id + " present in our system.");
+        }
     }
 
     private static void teacher_called() {
@@ -70,16 +119,7 @@ public class Main {
                         }
                         break;
                     case 2:
-                        System.out.println("\nEnter course code:");
-                        long code2 = scanner.nextLong();
-                        scanner.nextLine();
-                        if (CourseRepo.containsCode(code2)) {
-                            String name = CourseRepo.getCourse(code2).getName();
-                            CourseRepo.removeElement(code2);
-                            System.out.println("Course - " + name + " has been removed from our system.");
-                        } else {
-                            System.out.println("Course with CODE: " + code2 + " is not present in our system.");
-                        }
+                        teacher.deleteCourseFromSystem();
                         break;
                     case 3:
                         teacher.assignCourse();
@@ -207,20 +247,25 @@ public class Main {
             System.out.println("\n( ADMIN ) It seems you are new here. Please create your profile.");
             System.out.println("Enter your Name:");
             String name = scanner.nextLine();
-            System.out.println("Enter your Age:");
-            int age = scanner.nextInt();
-            scanner.nextLine();
-            System.out.println("Create your Password:");
-            String pass = scanner.nextLine();
+            if (NameValidator.isValidName(name)) {
+                System.out.println("Enter your Age:");
+                int age = scanner.nextInt();
+                scanner.nextLine();
+                System.out.println("Create your Password:");
+                String pass = scanner.nextLine();
 
-            Admin admin = Admin.getInstance(IDgenerator.getNewId(), name, age, pass);
+                // TODO: validate password
 
-            System.out.println("\nYour Profile Details:");
-            System.out.println("ID: " + admin.getId());
-            System.out.println("Name: " + admin.getName());
-            System.out.println("Age: " + admin.getAge());
-            System.out.println("Password: " + pass);
+                Admin admin = Admin.getInstance(IDgenerator.getNewId(), NameValidator.formatName(name), age, pass);
 
+                System.out.println("\nYour Profile Details:");
+                System.out.println("ID: " + admin.getId());
+                System.out.println("Name: " + admin.getName());
+                System.out.println("Age: " + admin.getAge());
+                System.out.println("Password: " + pass);
+            } else {
+                System.out.println("Name: " + name + " is not valid. Please try again.\n");
+            }
             admin_called();
         }
     }

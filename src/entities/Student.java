@@ -1,8 +1,11 @@
 package entities;
 
+import utility.NameValidator;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Student extends User {
@@ -56,6 +59,20 @@ public class Student extends User {
                     .stream()
                     .filter(course -> course.getCode() != code)
                     .collect(Collectors.toCollection(ArrayList::new));
+        }
+    }
+
+    public void printDetails() {
+        System.out.println("Student ID: " + getId());
+        System.out.println("Name: " + getName());
+        System.out.println("Age: " + getAge());
+        System.out.println("Courses:");
+        if (this.getCourses() == null || this.getCourses().isEmpty()) {
+            System.out.println("No courses assigned.");
+        } else {
+            for (Course course : this.getCourses()) {
+                System.out.println("  > " + course.getCode() + " : " + course.getName());
+            }
         }
     }
 
