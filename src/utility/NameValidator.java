@@ -1,6 +1,6 @@
 package utility;
 
-import java.util.Arrays;
+import java.util.regex.*;
 
 public class NameValidator {
     public static boolean isValidName(String name) {
@@ -23,9 +23,15 @@ public class NameValidator {
         for (String s : arr) {
             char c = Character.toUpperCase(s.charAt(0));
             s = c + s.substring(1);
-            System.out.println(s);
             res = res.concat(s + " ");
         }
         return res.trim();
+    }
+
+    public static boolean validatePassword(String password) {
+        String regex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
     }
 }

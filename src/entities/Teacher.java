@@ -203,7 +203,6 @@ public class Teacher extends User {
                     int age = scanner.nextInt();
                     scanner.nextLine();
                     this.setAge(age);
-                    System.out.println("Age updated, " + this.getAge());
                     break;
                 case 3:
                     Relationships.teacherAddingCourse(this);

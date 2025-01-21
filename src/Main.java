@@ -1,4 +1,5 @@
 import entities.*;
+import input_output.IpOp;
 import repositories.CourseRepo;
 import repositories.StudentRepo;
 import repositories.TeacherRepo;
@@ -16,11 +17,11 @@ public class Main {
         scanner.nextLine();
         if (StudentRepo.containsID(id)) {
             Student student = StudentRepo.getStudent(id);
-            System.out.println("\n\nWelcome, " + student.getName() + ".");
+            System.out.println("\nWelcome, " + student.getName() + ".");
 
             int user_ip;
             do {
-                System.out.println("\n\nSelect one of the below operations to perform:");
+                System.out.println("\nSelect one of the below operations to perform:");
                 System.out.println("1 > See your details");
                 System.out.println("2 > Update your name");
                 System.out.println("3 > Update your age");
@@ -41,7 +42,6 @@ public class Main {
                         int age = scanner.nextInt();
                         scanner.nextLine();
                         student.setAge(age);
-                        System.out.println("Age updated, " + student.getAge());
                         break;
                     case 4:
                         System.out.println(student.getGrade() == -1 ? "Grades not assigned for you." : student.getGrade());
@@ -252,9 +252,23 @@ public class Main {
                 int age = scanner.nextInt();
                 scanner.nextLine();
                 System.out.println("Create your Password:");
-                String pass = scanner.nextLine();
+                String pass;
 
-                // TODO: validate password
+                do {
+                    pass = scanner.nextLine();
+
+                    if (!NameValidator.validatePassword(pass)) {
+                        System.out.println("Password is invalid. It must contain:");
+                        System.out.println("- At least 8 characters");
+                        System.out.println("- At least one uppercase letter");
+                        System.out.println("- At least one lowercase letter");
+                        System.out.println("- At least one digit");
+                        System.out.println("- At least one special character");
+                        System.out.print("Try again: ");
+                    }
+                } while (!NameValidator.validatePassword(pass));
+
+                System.out.println("Password is valid.");
 
                 Admin admin = Admin.getInstance(IDgenerator.getNewId(), NameValidator.formatName(name), age, pass);
 
@@ -305,6 +319,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+        IpOp.allReadIns();
         Main.create_cli_interface();
     }
 }

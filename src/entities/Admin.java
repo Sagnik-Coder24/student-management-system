@@ -1,5 +1,6 @@
 package entities;
 
+import input_output.IpOp;
 import repositories.CourseRepo;
 import repositories.StudentRepo;
 import repositories.TeacherRepo;
@@ -19,6 +20,7 @@ public class Admin extends User {
             throw new IllegalArgumentException("Password cannot be null or empty.");
         }
         Admin.password = password;
+        IpOp.saveAdminToFile(this, password);
     }
 
     public static Admin getInstance(long id, String name, int age, String pass) {
@@ -50,18 +52,27 @@ public class Admin extends User {
     public void updatePassword() {
         Scanner sc = new Scanner(System.in);
         System.out.println("\nEnter new password.");
-        String password = sc.nextLine();
+        String pass;
 
-        if (password == null) {
-            System.out.println("Password cannot be null.");
-        } else if (password.isEmpty()) {
-            System.out.println("Password cannot be empty.");
-        } else if (Admin.password.equals(password)) {
-            System.out.println("You have entered the same password.");
-        } else {
-            Admin.password = password;
-            System.out.println("\nSuccessfully updated password.");
-        }
+        do {
+            pass = sc.nextLine();
+
+            if (!NameValidator.validatePassword(pass)) {
+                System.out.println("Password is invalid. It must contain:");
+                System.out.println("- At least 8 characters");
+                System.out.println("- At least one uppercase letter");
+                System.out.println("- At least one lowercase letter");
+                System.out.println("- At least one digit");
+                System.out.println("- At least one special character");
+                System.out.print("Try again: ");
+            }
+        } while (!NameValidator.validatePassword(pass));
+
+        System.out.println("Password is valid.");
+        Admin.password = pass;
+        IpOp.saveAdminToFile(this, password);
+        System.out.println("Successfully updated password.");
+
     }
 
     public void addStudent() {
@@ -75,6 +86,7 @@ public class Admin extends User {
             sc.nextLine();
             Student newSt = new Student(IDgenerator.getNewId(), NameValidator.formatName(name), age);
             StudentRepo.addElement(newSt);
+            System.out.println("\nThe provided student is added to our system.");
         } else {
             System.out.println("Name: " + name + " is not valid. Please try again.\n");
             addStudent();
@@ -101,6 +113,7 @@ public class Admin extends User {
             sc.nextLine();
             Teacher newT = new Teacher(IDgenerator.getNewId(), name, age);
             TeacherRepo.addElement(newT);
+            System.out.println("\nThe provided teacher is added to our system.");
         } else {
             System.out.println("Name: " + name + " is not valid. Please try again.\n");
             addTeacher();

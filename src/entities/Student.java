@@ -1,11 +1,7 @@
 package entities;
 
-import utility.NameValidator;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Student extends User {

@@ -2,6 +2,7 @@ package repositories;
 
 import entities.Student;
 import entities.Teacher;
+import input_output.IpOp;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,17 +16,19 @@ public class TeacherRepo {
 
     public static void addElement(Teacher obj) {
         allTeachers.put(obj.getId(), obj);
-        System.out.println("\nThe provided teacher is added to our system.");
+        IpOp.saveTeachersToFile(allTeachers);
     }
 
     public static void addElements(List<Teacher> objs) {
         objs.forEach(TeacherRepo::addElement);
+        IpOp.saveTeachersToFile(allTeachers);
     }
 
     public static void removeElement(long id) {
         if (TeacherRepo.containsID(id)) {
             allTeachers.remove(id);
             System.out.println("Teacher removed successfully.");
+            IpOp.saveTeachersToFile(allTeachers);
         } else {
             System.out.println("Teacher with ID: " + id + " id not present.");
         }

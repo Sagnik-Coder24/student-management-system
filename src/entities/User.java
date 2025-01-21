@@ -12,7 +12,7 @@ public class User {
     protected User(long id, String name, int age) {
         setId(id);
         setName(name);
-        setAge(age);
+        this.age=age;
     }
 
     public long getId() {
@@ -38,6 +38,7 @@ public class User {
     public void setAge(int age) {
         if (age > 0 && age <= 100) {
             this.age = age;
+            System.out.println("Age updated, " + this.getAge());
         } else {
             System.out.println("Entered age is not valid.");
         }
