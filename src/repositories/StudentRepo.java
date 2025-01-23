@@ -16,25 +16,18 @@ public class StudentRepo {
 
     public static void addElement(Student obj) {
         allStudents.put(obj.getId(), obj);
-        IpOp.saveStudentsToFile(allStudents);
-    }
-
-    public static void addElements(List<Student> objs) {
-        objs.forEach(StudentRepo::addElement);
-        IpOp.saveStudentsToFile(allStudents);
     }
 
     public static void removeElement(long id) {
         if (StudentRepo.containsID(id)) {
             allStudents.remove(id);
             System.out.println("Student removed successfully.");
-            IpOp.saveStudentsToFile(allStudents);
         } else {
             System.out.println("Student with ID: " + id + " id not present.");
         }
     }
 
-    public static boolean containsID(long id){
+    public static boolean containsID(long id) {
         return allStudents.containsKey(id);
     }
 
@@ -42,8 +35,12 @@ public class StudentRepo {
         return allStudents.isEmpty();
     }
 
-    public static Student getStudent(long id){
+    public static Student getStudent(long id) {
         return allStudents.get(id);
+    }
+
+    public static Map<Long, Student> getAllStudents() {
+        return allStudents;
     }
 
     public static void displayElements() {

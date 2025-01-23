@@ -16,25 +16,18 @@ public class TeacherRepo {
 
     public static void addElement(Teacher obj) {
         allTeachers.put(obj.getId(), obj);
-        IpOp.saveTeachersToFile(allTeachers);
-    }
-
-    public static void addElements(List<Teacher> objs) {
-        objs.forEach(TeacherRepo::addElement);
-        IpOp.saveTeachersToFile(allTeachers);
     }
 
     public static void removeElement(long id) {
         if (TeacherRepo.containsID(id)) {
             allTeachers.remove(id);
             System.out.println("Teacher removed successfully.");
-            IpOp.saveTeachersToFile(allTeachers);
         } else {
             System.out.println("Teacher with ID: " + id + " id not present.");
         }
     }
 
-    public static boolean containsID(long id){
+    public static boolean containsID(long id) {
         return allTeachers.containsKey(id);
     }
 
@@ -42,8 +35,12 @@ public class TeacherRepo {
         return allTeachers.isEmpty();
     }
 
-    public static Teacher getTeacher(long id){
+    public static Teacher getTeacher(long id) {
         return allTeachers.get(id);
+    }
+
+    public static Map<Long, Teacher> getAllTeachers() {
+        return allTeachers;
     }
 
     public static void displayElements() {

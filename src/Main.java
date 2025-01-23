@@ -320,6 +320,12 @@ public class Main {
 
     public static void main(String[] args) {
         IpOp.allReadIns();
-        Main.create_cli_interface();
+
+        try {
+            Main.create_cli_interface();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        IpOp.allWrites();
     }
 }

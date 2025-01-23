@@ -111,7 +111,7 @@ public class Admin extends User {
             System.out.println("enter age:");
             int age = sc.nextInt();
             sc.nextLine();
-            Teacher newT = new Teacher(IDgenerator.getNewId(), name, age);
+            Teacher newT = new Teacher(IDgenerator.getNewId(), NameValidator.formatName(name), age);
             TeacherRepo.addElement(newT);
             System.out.println("\nThe provided teacher is added to our system.");
         } else {

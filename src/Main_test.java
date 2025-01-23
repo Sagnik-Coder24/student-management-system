@@ -3,10 +3,16 @@ import entities.Course;
 import entities.Student;
 import entities.Teacher;
 import input_output.IpOp;
+import org.json.*;
+import org.json.JSONString;
 import repositories.CourseRepo;
 import repositories.StudentRepo;
 import utility.NameValidator;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -57,7 +63,26 @@ public class Main_test {
 //                new Student(4, "a", 34)));
 //        StudentRepo.displayElements();
 //        IpOp.allReadIns();
-//        StudentRepo.displayElements();
 
+        IpOp.allReadIns();
+
+        try (BufferedReader br = new BufferedReader(new FileReader("src/input_output/files/utils.json"))) {
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                content.append(line);
+            }
+
+            JSONObject jsonObject = content.isEmpty() ? new JSONObject() : new JSONObject(new JSONTokener(content.toString()));
+            jsonObject.put("maxId", 12345);
+
+            try (FileWriter fileWriter = new FileWriter("src/input_output/files/utils.json")) {
+                fileWriter.write(jsonObject.toString(4));
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        } catch (org.json.JSONException e) {
+            System.out.println("Invalid JSON format: " + e.getMessage());
+        }
     }
 }

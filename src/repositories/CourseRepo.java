@@ -2,6 +2,7 @@ package repositories;
 
 import entities.Course;
 import entities.Teacher;
+import input_output.IpOp;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +16,6 @@ public class CourseRepo {
 
     public static void addElement(Course obj) {
         allCourses.put(obj.getCode(), obj);
-    }
-
-    public static void addElements(List<Course> objs) {
-        objs.forEach(CourseRepo::addElement);
     }
 
     public static void removeElement(long id) {
@@ -35,6 +32,10 @@ public class CourseRepo {
 
     public static Course getCourse(long code) {
         return allCourses.get(code);
+    }
+
+    public static Map<Long, Course> getAllCourses(){
+        return allCourses;
     }
 
     public static void displayElements() {
