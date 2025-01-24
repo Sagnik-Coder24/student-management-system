@@ -25,7 +25,8 @@ public class Main {
                 System.out.println("1 > See your details");
                 System.out.println("2 > Update your name");
                 System.out.println("3 > Update your age");
-                System.out.println("4 > Check your grade");
+                System.out.println("4 > Check your final grade (CGPA)");
+                System.out.println("5 > Check all subject grades");
                 System.out.println("0 > Go Back");
                 user_ip = scanner.nextInt();
                 scanner.nextLine();
@@ -44,7 +45,10 @@ public class Main {
                         student.setAge(age);
                         break;
                     case 4:
-                        System.out.println(student.getGrade() == -1 ? "Grades not assigned for you." : student.getGrade());
+                        System.out.println(student.getFinalGrade() == -1 ? "All the grades not assigned for you." : student.getFinalGrade());
+                        break;
+                    case 5:
+                        student.displayGrades();
                         break;
                     case 0:
                         System.out.println("Going back to the previous menu...");
@@ -194,11 +198,11 @@ public class Main {
                 System.out.println("2 > Remove Student");
                 System.out.println("3 > Add Teacher");
                 System.out.println("4 > Remove Teacher");
-                System.out.println("5 > Update your password");
-                System.out.println("6 > See your details");
-                System.out.println("7 > List of all students");
-                System.out.println("8 > List of all teachers");
-                System.out.println("9 > List of all courses");
+                System.out.println("5 > See your details");
+                System.out.println("6 > List of all students");
+                System.out.println("7 > List of all teachers");
+                System.out.println("8 > List of all courses");
+                System.out.println("9 > Additional options");
                 System.out.println("0 > Go Back");
                 user_ip = scanner.nextInt();
                 scanner.nextLine();
@@ -217,20 +221,20 @@ public class Main {
                         admin.removeTeacher();
                         break;
                     case 5:
-                        admin.updatePassword();
-                        break;
-                    case 6:
                         System.out.println();
                         admin.printDetails();
                         break;
-                    case 7:
+                    case 6:
                         admin.listStudents();
                         break;
-                    case 8:
+                    case 7:
                         admin.listTeachers();
                         break;
-                    case 9:
+                    case 8:
                         admin.listCourses();
+                        break;
+                    case 9:
+                        admin.callAdditionalOptions();
                         break;
                     case 0:
                         System.out.println("Going back to the previous menu...");
@@ -291,7 +295,7 @@ public class Main {
         System.out.println("\nWelcome to our Student Management Application 🙏");
 
         do {
-            System.out.println("\nYou are a ? ( Please select one of the following ) - \n1 > Student\n2 > Teacher\n3 > Admin\n4 > Exit");
+            System.out.println("\nYou are a ? ( Please select one of the following ) - \n1 > Student\n2 > Teacher\n3 > Admin\n0 > Exit");
             userType = scanner.nextInt();
             scanner.nextLine();
 
@@ -305,13 +309,13 @@ public class Main {
                 case 3:
                     admin_called();
                     break;
-                case 4:
+                case 0:
                     System.out.println("\nExiting application. Goodbye! 🙏");
                     break;
                 default:
                     System.out.println("Invalid input..");
             }
-        } while (userType != 4);
+        } while (userType != 0);
 
 
         scanner.close();
@@ -327,5 +331,7 @@ public class Main {
             e.printStackTrace();
         }
         IpOp.allWrites();
+
+        System.out.println(StudentRepo.getStudent(2).grades);
     }
 }

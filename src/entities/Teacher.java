@@ -3,7 +3,6 @@ package entities;
 import repositories.CourseRepo;
 import repositories.StudentRepo;
 import repositories.TeacherRepo;
-import utility.NameValidator;
 import utility.Relationships;
 
 import java.util.ArrayList;
@@ -99,29 +98,66 @@ public class Teacher extends User {
 
     public void assignGrade() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter student ID:");
-        long id = scanner.nextLong();
-        scanner.nextLine();
-        if (StudentRepo.containsID(id)) {
-            Student student = StudentRepo.getStudent(id);
-            System.out.println("Student name - " + student.getName());
-            if (student.getGrade() == -1) {
-                System.out.println("Enter student's grade:");
-                double grade = scanner.nextDouble();
-                scanner.nextLine();
-                student.setGrade(grade);
-            } else {
-                System.out.println("The student's current grade is " + student.getGrade() + ".");
-                System.out.println("Enter new grade: ( Enter -1 to exit )");
-                double grade = scanner.nextDouble();
-                scanner.nextLine();
-                if (grade == -1) return;
-                student.setGrade(grade);
-            }
-            System.out.println("The grade has been updated for " + student.getName() + ".");
-        } else {
-            System.out.println("Student with ID: " + id + " is not present in our system.");
+        System.out.println("\nEnter code of one of the below specialized course to grade:");
+        for (Course course : this.getCourses()) {
+            System.out.println("> " + course.getCode() + " : " + course.getName());
         }
+        long code = scanner.nextLong();
+        scanner.nextLine();
+        if (this.isCourseCodePresent(code)) {
+            Course course = CourseRepo.getCourse(code);
+            System.out.println(course.getName() + " is assigned to the below students:");
+            for (Student student : course.getStudents()) {
+                System.out.println("> " + student.getId() + " : " + student.getName()
+                        + (student.getGrades().get(code) == -1 ? "" : " : Grade - " + student.getGrades().get(code)));
+            }
+            System.out.println("Enter students ID to grade:");
+            long id = scanner.nextLong();
+            scanner.nextLine();
+            if (course.isStudentIdPresent(id)) {
+                Student student = StudentRepo.getStudent(id);
+                System.out.println("Grade must be between 0 to 10.");
+                System.out.println("Enter " + student.getName() + "'s grade for " + course.getName() + ":");
+                double grade = scanner.nextDouble();
+                scanner.nextLine();
+                if (grade < 0 || grade > 10) {
+                    System.out.println("Invalid input. Try again.");
+                    assignGrade();
+                } else {
+                    student.updateGrades(code, grade);
+                }
+            } else {
+                System.out.println("Invalid input. Try again.");
+                assignGrade();
+            }
+        } else {
+            System.out.println("Invalid input. Try again.");
+            assignGrade();
+        }
+
+//        System.out.println("Enter student ID:");
+//        long id = scanner.nextLong();
+//        scanner.nextLine();
+//        if (StudentRepo.containsID(id)) {
+//            Student student = StudentRepo.getStudent(id);
+//            System.out.println("Student name - " + student.getName());
+//            if (student.getFinalGrade() == -1) {
+//                System.out.println("Enter student's grade:");
+//                double grade = scanner.nextDouble();
+//                scanner.nextLine();
+//                student.calcFinalGrade(grade);
+//            } else {
+//                System.out.println("The student's current grade is " + student.getFinalGrade() + ".");
+//                System.out.println("Enter new grade: ( Enter -1 to exit )");
+//                double grade = scanner.nextDouble();
+//                scanner.nextLine();
+//                if (grade == -1) return;
+//                student.calcFinalGrade(grade);
+//            }
+//            System.out.println("The grade has been updated for " + student.getName() + ".");
+//        } else {
+//            System.out.println("Student with ID: " + id + " is not present in our system.");
+//        }
     }
 
     public void conductExam() {
@@ -183,10 +219,10 @@ public class Teacher extends User {
 
     public void updateDetails() {
         printDetails();
-        System.out.println("\nSelect one of the below options to perform:");
         int user_ip;
         do {
             Scanner scanner = new Scanner(System.in);
+            System.out.println("\nSelect one of the below options to perform:");
             System.out.println("1 > Update name");
             System.out.println("2 > Update age");
             System.out.println("3 > Add specialized courses");
@@ -212,7 +248,8 @@ public class Teacher extends User {
                     long code = scanner.nextLong();
                     scanner.nextLine();
                     if (this.isCourseCodePresent(code)) {
-                        this.removeCourse(code);
+                        Course course = CourseRepo.getCourse(code);
+                        Relationships.removeTeacherCourse(this, course);
                         System.out.println("Course CODE: - " + code + " has been removed.");
                     } else {
                         System.out.println("Course CODE: - " + code + " is not present.");
@@ -230,15 +267,20 @@ public class Teacher extends User {
 
     @Override
     public void printDetails() {
-        System.out.println("Teacher ID: " + getId());
-        System.out.println("Name: " + getName());
-        System.out.println("Age: " + getAge());
-        System.out.println("Courses:");
+        printDetails(0);
+    }
+
+    public void printDetails(int indent) {
+        String indentation = " ".repeat(indent);
+        System.out.println(indentation + "Teacher ID: " + getId());
+        System.out.println(indentation + "Name: " + getName());
+        System.out.println(indentation + "Age: " + getAge());
+        System.out.println(indentation + "Specialized Courses:");
         if (this.getCourses() == null || this.getCourses().isEmpty()) {
-            System.out.println("No specialized courses assigned.");
+            System.out.println(indentation + "No specialized courses assigned.");
         } else {
             for (Course course : this.getCourses()) {
-                System.out.println("  > " + course.getCode() + " : " + course.getName());
+                System.out.println(indentation + "---> " + course.getCode() + " : " + course.getName());
             }
         }
     }

@@ -85,7 +85,7 @@ public class IpOp {
                 for (Course c : s.getCourses()) {
                     course = course + c.getCode() + "|";
                 }
-                text = s.getId() + "," + s.getName() + "," + s.getAge() + "," + s.getGrade() + "," + course;
+                text = s.getId() + "," + s.getName() + "," + s.getAge() + "," + s.getFinalGrade() + "," + course;
                 bw.write(text);
                 bw.newLine();
             }

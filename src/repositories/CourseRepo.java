@@ -7,6 +7,7 @@ import input_output.IpOp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CourseRepo {
     private CourseRepo() {
@@ -34,7 +35,7 @@ public class CourseRepo {
         return allCourses.get(code);
     }
 
-    public static Map<Long, Course> getAllCourses(){
+    public static Map<Long, Course> getAllCourses() {
         return allCourses;
     }
 
@@ -42,8 +43,16 @@ public class CourseRepo {
         if (CourseRepo.isEmpty()) {
             System.out.println("\nThere are currently no courses in the system.");
         } else {
-            System.out.println("\nAll the courses are displayed below:");
-            allCourses.forEach((key, value) -> System.out.println("> " + key + " : " + value));
+            System.out.println("\nAll the courses are displayed below:\n");
+            AtomicInteger counter = new AtomicInteger(1);
+            allCourses
+                    .values()
+                    .forEach(c -> {
+                        System.out.println("------------------- " + counter.get() + " ------------------- ");
+                        c.printDetails();
+                        System.out.println("-----------------------------------------\n");
+                        counter.getAndIncrement();
+                    });
         }
     }
 

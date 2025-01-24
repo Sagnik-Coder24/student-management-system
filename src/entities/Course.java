@@ -77,6 +77,10 @@ public class Course {
         }
     }
 
+    public boolean isStudentIdPresent(long id) {
+        return this.getStudents().stream().anyMatch(student -> student.getId() == id);
+    }
+
     public void addStudent(Student student) {
         if (!students.contains(student)) {
             students.add(student);
@@ -91,6 +95,28 @@ public class Course {
             System.out.println("No student found with ID: " + id);
         }
     }
+
+    public void printDetails() {
+        System.out.println("Course CODE: " + getCode());
+        System.out.println("Name: " + getName());
+        System.out.println("Teachers specializing in this course:");
+        if (this.getTeachers() == null || this.getTeachers().isEmpty()) {
+            System.out.println("    No teachers specializing in this.");
+        } else {
+            for (Teacher teacher : this.getTeachers()) {
+                teacher.printDetails(4);
+            }
+        }
+        System.out.println("Students assigned to this course:");
+        if (this.getStudents() == null || this.getStudents().isEmpty()) {
+            System.out.println("    No students assigned.");
+        } else {
+            for (Student student : this.getStudents()) {
+                student.printDetails(4);
+            }
+        }
+    }
+
 
     @Override
     public String toString() {

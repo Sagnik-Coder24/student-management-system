@@ -141,6 +141,58 @@ public class Admin extends User {
         CourseRepo.displayElements();
     }
 
+    public void getStudentsGreaterThanGrade(){
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\nEnter the number N:");
+        double n = scanner.nextDouble();
+        scanner.nextLine();
+        StudentRepo.getStudentsGreaterThanGrade(n);
+    }
+
+    public void callAdditionalOptions() {
+        int user_ip;
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("\nSelect one of the below operations:");
+            System.out.println("1 > Display students sorted by age");
+            System.out.println("2 > Update your name");
+            System.out.println("3 > Update your age");
+            System.out.println("4 > Update your password");
+            System.out.println("5 > Students with grades > N");
+            System.out.println("0 > Go back");
+            user_ip = scanner.nextInt();
+            scanner.nextLine();
+            switch (user_ip) {
+                case 1:
+                    System.out.println("Ascending or Descending? ( A / D )");
+                    String c = scanner.nextLine();
+                    StudentRepo.displayStudentsSortedByAge(!c.equalsIgnoreCase("D"));
+                    break;
+                case 2:
+                    this.updateName();
+                    break;
+                case 3:
+                    System.out.println("Enter new age:");
+                    int age = scanner.nextInt();
+                    scanner.nextLine();
+                    this.setAge(age);
+                    break;
+                case 4:
+                    this.updatePassword();
+                    break;
+                case 5:
+                    this.getStudentsGreaterThanGrade();
+                    break;
+                case 0:
+                    System.out.println("Going back to the previous menu...");
+                    return;
+                default:
+                    System.out.println("Invalid input.. Please select a valid option.");
+                    break;
+            }
+        } while (true);
+    }
+
     public String toString() {
         return "Admin { id = " + super.getId() +
                 ", name = " + super.getName() +

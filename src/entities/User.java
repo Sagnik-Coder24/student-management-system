@@ -12,7 +12,7 @@ public class User {
     protected User(long id, String name, int age) {
         setId(id);
         setName(name);
-        this.age=age;
+        this.age = age;
     }
 
     public long getId() {
@@ -58,7 +58,8 @@ public class User {
     }
 
     public void printDetails() {
-        System.out.println("The user details are: ( " + "id = " + id + ", name = '" + name + '\'' + ", age = " + age + " )");
+        String className = this.getClass().getSimpleName();
+        System.out.println(className + " details: ( id = " + id + ", name = '" + name + "', age = " + age + " )");
     }
 
 }

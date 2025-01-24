@@ -23,6 +23,11 @@ public class Relationships {
         course.removeStudent(student.getId());
     }
 
+    public static void removeTeacherCourse(Teacher teacher, Course course) {
+        teacher.removeCourse(course.getCode());
+        course.removeTeacher(teacher.getId());
+    }
+
     public static void teacherAddingCourse(Teacher teacher) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter course code:");

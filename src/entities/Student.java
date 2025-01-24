@@ -1,51 +1,72 @@
 package entities;
 
+import repositories.CourseRepo;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Student extends User {
-    private double grade;
+    private double finalGrade;
+    public Map<Long, Double> grades = new HashMap<>();      // TODO: ip op
     private List<Course> courses = new ArrayList<>();
 
-    public Student(long id, String name, int age, double grade, List<Course> courses) {
-        super(id, name, age);
-        this.grade = grade;
-        setCourses(courses);
-    }
-
     public Student(long id, String name, int age, double grade) {
-        this(id, name, age, grade, null);
+        super(id, name, age);
+        this.finalGrade = grade;
     }
 
     public Student(long id, String name, int age) {
-        this(id, name, age, -1);
+        this(id, name, age, -1.0);
     }
 
-    public double getGrade() {
-        return grade;
+    public double getFinalGrade() {
+        calcFinalGrade();
+        return finalGrade;
     }
 
-    public void setGrade(double grade) {
-        if (grade >= 0) {
-            this.grade = grade;
+    public Map<Long, Double> getGrades() {
+        return grades;
+    }
+
+    public void displayGrades() {
+        if (this.getGrades().isEmpty() || this.getGrades() == null) {
+            System.out.println("No courses assigned.");
         } else {
-            System.out.println("Grade should be greater than or equal to 0.");
+            System.out.println("\n(" + this.getName() + ") Course CODE | Course Name | Grade");
+            this.getGrades().forEach((code, grade) -> {
+                Course course = CourseRepo.getCourse(code);
+                System.out.println("> " + code + " | " + course.getName() + " | " + (grade == -1 ? "Not yet set" : grade));
+            });
         }
+    }
+
+    public void calcFinalGrade() {
+        if (grades.values().stream().anyMatch(g -> g == -1.0)) {
+            this.finalGrade = -1;
+        } else {
+            this.finalGrade = grades.values().stream()
+                    .mapToDouble(Double::doubleValue)
+                    .average()
+                    .orElse(-1.0);
+        }
+    }
+
+    public void updateGrades(long code, double grade) {
+        grades.put(code, grade);
     }
 
     public List<Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(List<Course> courses) {
-        if (courses != null)
-            this.courses = courses;
-    }
-
     public void addCourse(Course course) {
-        if (!courses.contains(course))
+        if (!courses.contains(course)) {
             courses.add(course);
+            grades.put(course.getCode(), -1.0);
+        }
     }
 
     public void removeCourse(long code) {
@@ -55,19 +76,25 @@ public class Student extends User {
                     .stream()
                     .filter(course -> course.getCode() != code)
                     .collect(Collectors.toCollection(ArrayList::new));
+            grades.remove(code);
         }
     }
 
     public void printDetails() {
-        System.out.println("Student ID: " + getId());
-        System.out.println("Name: " + getName());
-        System.out.println("Age: " + getAge());
-        System.out.println("Courses:");
+        printDetails(0);
+    }
+
+    public void printDetails(int indent) {
+        String indentation = " ".repeat(indent);
+        System.out.println(indentation + "Student ID: " + getId());
+        System.out.println(indentation + "Name: " + getName());
+        System.out.println(indentation + "Age: " + getAge());
+        System.out.println(indentation + "Courses assigned:");
         if (this.getCourses() == null || this.getCourses().isEmpty()) {
-            System.out.println("No courses assigned.");
+            System.out.println(indentation + "No courses assigned.");
         } else {
             for (Course course : this.getCourses()) {
-                System.out.println("  > " + course.getCode() + " : " + course.getName());
+                System.out.println(indentation + "---> " + course.getCode() + " : " + course.getName());
             }
         }
     }
@@ -78,7 +105,7 @@ public class Student extends User {
                 ", name = " + super.getName() +
                 ", age = " + super.getAge() +
                 ", grade = " +
-                (getGrade() == -1 ? "Grades not assigned for this particular student." : getGrade())
+                (getFinalGrade() == -1 ? "Grades not assigned for this particular student." : getFinalGrade())
                 + " }";
     }
 }

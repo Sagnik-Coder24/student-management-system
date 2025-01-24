@@ -7,6 +7,7 @@ import input_output.IpOp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TeacherRepo {
     private TeacherRepo() {
@@ -47,8 +48,16 @@ public class TeacherRepo {
         if (TeacherRepo.isEmpty()) {
             System.out.println("\nThere are currently no teachers in the system.");
         } else {
-            System.out.println("\nAll the teachers are displayed below:");
-            allTeachers.forEach((key, value) -> System.out.println("> " + key + " : " + value));
+            System.out.println("\nAll the teachers are displayed below:\n");
+            AtomicInteger counter = new AtomicInteger(1);
+            allTeachers
+                    .values()
+                    .forEach(t -> {
+                        System.out.println("------------------- " + counter.get() + " ------------------- ");
+                        t.printDetails();
+                        System.out.println("-----------------------------------------\n");
+                        counter.getAndIncrement();
+                    });
         }
     }
 }

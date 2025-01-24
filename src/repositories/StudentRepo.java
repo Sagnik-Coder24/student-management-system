@@ -1,12 +1,10 @@
 package repositories;
 
 import entities.Student;
-import entities.Teacher;
-import input_output.IpOp;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class StudentRepo {
     private StudentRepo() {
@@ -43,12 +41,59 @@ public class StudentRepo {
         return allStudents;
     }
 
+    public static void getStudentsGreaterThanGrade(double n) {
+        if (StudentRepo.isEmpty()) {
+            System.out.println("\nThere are currently no students in the system.");
+        } else {
+            System.out.println("\nAll the students with grade grater than " + n + " are displayed below:\n");
+            AtomicInteger counter = new AtomicInteger(1);
+            allStudents
+                    .values()
+                    .stream()
+                    .filter(s -> s.getFinalGrade() >= n)
+                    .forEach(s -> {
+                        System.out.println("------------------- " + counter.get() + " ------------------- ");
+                        s.printDetails();
+                        System.out.println("-----------------------------------------\n");
+                        counter.getAndIncrement();
+                    });
+        }
+    }
+
     public static void displayElements() {
         if (StudentRepo.isEmpty()) {
             System.out.println("\nThere are currently no students in the system.");
         } else {
-            System.out.println("\nAll the students are displayed below:");
-            allStudents.forEach((key, value) -> System.out.println("> " + key + " : " + value));
+            System.out.println("\nAll the students are displayed below:\n");
+            AtomicInteger counter = new AtomicInteger(1);
+            allStudents
+                    .values()
+                    .forEach(s -> {
+                        System.out.println("------------------- " + counter.get() + " ------------------- ");
+                        s.printDetails();
+                        System.out.println("-----------------------------------------\n");
+                        counter.getAndIncrement();
+                    });
+        }
+    }
+
+    public static void displayStudentsSortedByAge(boolean ascending) {
+        if (StudentRepo.isEmpty()) {
+            System.out.println("\nThere are currently no students in the system.");
+        } else {
+            System.out.println("\nAll the students are displayed below:\n");
+            AtomicInteger counter = new AtomicInteger(1);
+            allStudents
+                    .values()
+                    .stream()
+                    .sorted((a, b) -> ascending ? a.getAge() - b.getAge() : b.getAge() - a.getAge())
+                    .forEach(s -> {
+                        System.out.println("------------------- " + counter.get() + " ------------------- ");
+                        s.printDetails();
+                        System.out.println("-----------------------------------------\n");
+                        counter.getAndIncrement();
+                    });
+
         }
     }
 }
