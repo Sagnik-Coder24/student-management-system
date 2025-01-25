@@ -121,17 +121,17 @@ public class Teacher extends User {
                 double grade = scanner.nextDouble();
                 scanner.nextLine();
                 if (grade < 0 || grade > 10) {
-                    System.out.println("Invalid input. Try again.");
+                    System.out.println("Invalid grade. Try again.");
                     assignGrade();
                 } else {
                     student.updateGrades(code, grade);
                 }
             } else {
-                System.out.println("Invalid input. Try again.");
+                System.out.println("Invalid student ID. Try again.");
                 assignGrade();
             }
         } else {
-            System.out.println("Invalid input. Try again.");
+            System.out.println("Invalid course CODE. Try again.");
             assignGrade();
         }
 

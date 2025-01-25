@@ -1,6 +1,7 @@
 package input_output;
 
 import entities.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import repositories.CourseRepo;
@@ -10,13 +11,11 @@ import utility.IDgenerator;
 import utility.Relationships;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class IpOp {
     private static final String admin_file_path = "src/input_output/files/admin.csv";
-    private static final String students_file_path = "src/input_output/files/students.csv";
+    private static final String students_file_path = "src/input_output/files/students.json";
     private static final String teachers_file_path = "src/input_output/files/teachers.csv";
     private static final String courses_file_path = "src/input_output/files/courses.csv";
     private static final String utils_file_path = "src/input_output/files/utils.json";
@@ -74,24 +73,46 @@ public class IpOp {
     }
 
     private static void saveStudentsToFile(Map<Long, Student> allStudents) {
-        String header = "ID,NAME,AGE,GRADE,COURSES\n";
+//        String header = "ID,NAME,AGE,GRADE,COURSES\n";
+//
+//        try (BufferedWriter bw = new BufferedWriter(new FileWriter(students_file_path))) {
+//            bw.write(header);
+//
+//            String text;
+//            for (Student s : allStudents.values()) {
+//                String course = s.getCourses().isEmpty() ? "null" : "|";
+//                for (Course c : s.getCourses()) {
+//                    course = course + c.getCode() + "|";
+//                }
+//                text = s.getId() + "," + s.getName() + "," + s.getAge() + "," + course;
+//                bw.write(text);
+//                bw.newLine();
+//            }
+//            bw.flush();
+//        } catch (IOException e) {
+//            System.out.println("An error occurred: " + e.getMessage());
+//        }
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(students_file_path))) {
-            bw.write(header);
-
-            String text;
+        try {
+            JSONArray jsonArray = new JSONArray();
             for (Student s : allStudents.values()) {
-                String course = s.getCourses().isEmpty() ? "null" : "|";
-                for (Course c : s.getCourses()) {
-                    course = course + c.getCode() + "|";
-                }
-                text = s.getId() + "," + s.getName() + "," + s.getAge() + "," + s.getFinalGrade() + "," + course;
-                bw.write(text);
-                bw.newLine();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id", s.getId());
+                jsonObject.put("name", s.getName());
+                jsonObject.put("age", s.getAge());
+                JSONObject grades = new JSONObject();
+                s.getGrades().forEach((code, grade) -> grades.put(String.valueOf(code), grade));
+                jsonObject.put("grades", grades);
+                jsonArray.put(jsonObject);
             }
-            bw.flush();
+
+            try (FileWriter fileWriter = new FileWriter(students_file_path, false)) {
+                fileWriter.write(jsonArray.toString(4));
+            }
         } catch (IOException e) {
             System.out.println("An error occurred: " + e.getMessage());
+        } catch (org.json.JSONException e) {
+            System.out.println("Invalid JSON format: " + e.getMessage());
         }
     }
 
@@ -200,28 +221,42 @@ public class IpOp {
 
     private static void readStudentsFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(students_file_path))) {
+            StringBuilder content = new StringBuilder();
             String line;
-            br.readLine();
-
             while ((line = br.readLine()) != null) {
-                String[] studentData = line.split(",");
-                long id = Long.parseLong(studentData[0]);
-                String name = studentData[1];
-                int age = Integer.parseInt(studentData[2]);
-                double grade = Double.parseDouble(studentData[3]);
-                List<Long> courses = studentData[4].equals("null") ? null : Arrays.stream(studentData[4]
-                                .split("\\|"))
-                        .filter(s -> !s.isEmpty())
-                        .map(Long::parseLong)
-                        .toList();
-
-                Student temp = new Student(id, name, age, grade);
-                courseMap(temp, courses);
-                StudentRepo.addElement(temp);
+                content.append(line);
             }
 
+            if (!content.isEmpty()) {
+                JSONArray students = new JSONArray(new JSONTokener(content.toString()));
+                for (int i = 0; i < students.length(); i++) {
+                    JSONObject student = students.getJSONObject(i);
+                    long id = student.getLong("id");
+                    String name = student.getString("name");
+                    int age = student.getInt("age");
+                    JSONObject grades = student.getJSONObject("grades");
+
+                    Student temp = new Student(id, name, age);
+                    Set<String> gradeKeys = grades.keySet();
+                    List<Long> gradeKeyList = new ArrayList<>();
+                    for (String key : gradeKeys) {
+                        gradeKeyList.add(Long.parseLong(key));
+                    }
+                    courseMap(temp, gradeKeyList);
+                    StudentRepo.addElement(temp);
+
+                    Iterator<String> keys = grades.keys();
+                    while (keys.hasNext()) {
+                        Long courseCode = Long.valueOf(keys.next());
+                        double grade = grades.getDouble(String.valueOf(courseCode));
+                        temp.updateGrades(courseCode,grade);
+                    }
+                }
+            }
         } catch (IOException e) {
             System.out.println("An error occurred: " + e.getMessage());
+        } catch (org.json.JSONException e) {
+            System.out.println("Invalid JSON format: " + e.getMessage());
         }
     }
 

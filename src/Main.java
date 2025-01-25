@@ -331,7 +331,5 @@ public class Main {
             e.printStackTrace();
         }
         IpOp.allWrites();
-
-        System.out.println(StudentRepo.getStudent(2).grades);
     }
 }

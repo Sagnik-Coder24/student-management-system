@@ -9,22 +9,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Student extends User {
-    private double finalGrade;
     public Map<Long, Double> grades = new HashMap<>();      // TODO: ip op
     private List<Course> courses = new ArrayList<>();
 
-    public Student(long id, String name, int age, double grade) {
-        super(id, name, age);
-        this.finalGrade = grade;
-    }
-
     public Student(long id, String name, int age) {
-        this(id, name, age, -1.0);
+        super(id, name, age);
     }
 
     public double getFinalGrade() {
-        calcFinalGrade();
-        return finalGrade;
+        return calcFinalGrade();
     }
 
     public Map<Long, Double> getGrades() {
@@ -43,11 +36,11 @@ public class Student extends User {
         }
     }
 
-    public void calcFinalGrade() {
+    public double calcFinalGrade() {
         if (grades.values().stream().anyMatch(g -> g == -1.0)) {
-            this.finalGrade = -1;
+            return -1;
         } else {
-            this.finalGrade = grades.values().stream()
+            return grades.values().stream()
                     .mapToDouble(Double::doubleValue)
                     .average()
                     .orElse(-1.0);
