@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Student extends User {
-    public Map<Long, Double> grades = new HashMap<>();      // TODO: ip op
+    public Map<Long, Double> grades = new HashMap<>();
     private List<Course> courses = new ArrayList<>();
 
     public Student(long id, String name, int age) {

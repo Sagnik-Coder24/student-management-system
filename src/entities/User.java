@@ -2,6 +2,7 @@ package entities;
 
 import utility.NameValidator;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class User {
@@ -27,7 +28,7 @@ public class User {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -35,12 +36,29 @@ public class User {
         return age;
     }
 
-    public void setAge(int age) {
-        if (age > 0 && age <= 100) {
-            this.age = age;
-            System.out.println("Age updated, " + this.getAge());
-        } else {
-            System.out.println("Entered age is not valid.");
+    private void setAge(int age) {
+        this.age = age;
+    }
+
+    public void updateAge() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter new age:");
+        while (true) {
+            try {
+                int age = scanner.nextInt();
+                scanner.nextLine();
+                if (age > 0 && age <= 110) {
+                    this.age = age;
+                    this.setAge(age);
+                    System.out.println("Age updated, " + this.getAge());
+                    return;
+                } else {
+                    System.out.println("Entered age is out of range. Try again.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. You have to enter a valid number. Try again.");
+                scanner.nextLine();
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import repositories.TeacherRepo;
 import utility.Relationships;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -106,6 +107,10 @@ public class Teacher extends User {
         scanner.nextLine();
         if (this.isCourseCodePresent(code)) {
             Course course = CourseRepo.getCourse(code);
+            if (course.getStudents() == null || course.getStudents().isEmpty()) {
+                System.out.println(course.getName() + " is not assigned to any student. Going back...");
+                return;
+            }
             System.out.println(course.getName() + " is assigned to the below students:");
             for (Student student : course.getStudents()) {
                 System.out.println("> " + student.getId() + " : " + student.getName()
@@ -118,13 +123,20 @@ public class Teacher extends User {
                 Student student = StudentRepo.getStudent(id);
                 System.out.println("Grade must be between 0 to 10.");
                 System.out.println("Enter " + student.getName() + "'s grade for " + course.getName() + ":");
-                double grade = scanner.nextDouble();
-                scanner.nextLine();
-                if (grade < 0 || grade > 10) {
-                    System.out.println("Invalid grade. Try again.");
-                    assignGrade();
-                } else {
-                    student.updateGrades(code, grade);
+                while (true) {
+                    try {
+                        double grade = scanner.nextDouble();
+                        scanner.nextLine();
+                        if (grade < 0 || grade > 10) {
+                            System.out.println("Invalid grade. Try again.");
+                        } else {
+                            student.updateGrades(code, grade);
+                            break;
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. You have to enter a valid number. Try again.");
+                        scanner.nextLine();
+                    }
                 }
             } else {
                 System.out.println("Invalid student ID. Try again.");
@@ -235,10 +247,7 @@ public class Teacher extends User {
                     this.updateName();
                     break;
                 case 2:
-                    System.out.println("Enter new age:");
-                    int age = scanner.nextInt();
-                    scanner.nextLine();
-                    this.setAge(age);
+                    this.updateAge();
                     break;
                 case 3:
                     Relationships.teacherAddingCourse(this);

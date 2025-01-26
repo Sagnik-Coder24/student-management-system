@@ -7,6 +7,7 @@ import repositories.TeacherRepo;
 import utility.IDgenerator;
 import utility.NameValidator;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Admin extends User {
@@ -40,13 +41,11 @@ public class Admin extends User {
     }
 
     public static boolean checkPassSet() {
-        if (password == null) return false;
-        else return true;
+        return password != null;
     }
 
     public boolean checkPassMatch(String pass) {
-        if (password.equals(pass)) return true;
-        else return false;
+        return password.equals(pass);
     }
 
     public void updatePassword() {
@@ -82,11 +81,23 @@ public class Admin extends User {
         String name = sc.nextLine();
         if (NameValidator.isValidName(name)) {
             System.out.println("enter age:");
-            int age = sc.nextInt();
-            sc.nextLine();
-            Student newSt = new Student(IDgenerator.getNewId(), NameValidator.formatName(name), age);
-            StudentRepo.addElement(newSt);
-            System.out.println("\nThe provided student is added to our system.");
+            while (true) {
+                try {
+                    int age = sc.nextInt();
+                    sc.nextLine();
+                    if (age > 0 && age <= 110) {
+                        Student newSt = new Student(IDgenerator.getNewId(), NameValidator.formatName(name), age);
+                        StudentRepo.addElement(newSt);
+                        System.out.println("\nThe provided student is added to our system.");
+                        break;
+                    } else {
+                        System.out.println("Entered age is out of range. Try again.");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. You have to enter a valid number. Try again.");
+                    sc.nextLine();
+                }
+            }
         } else {
             System.out.println("Name: " + name + " is not valid. Please try again.\n");
             addStudent();
@@ -109,16 +120,27 @@ public class Admin extends User {
         String name = sc.nextLine();
         if (NameValidator.isValidName(name)) {
             System.out.println("enter age:");
-            int age = sc.nextInt();
-            sc.nextLine();
-            Teacher newT = new Teacher(IDgenerator.getNewId(), NameValidator.formatName(name), age);
-            TeacherRepo.addElement(newT);
-            System.out.println("\nThe provided teacher is added to our system.");
+            while (true) {
+                try {
+                    int age = sc.nextInt();
+                    sc.nextLine();
+                    if (age > 0 && age <= 110) {
+                        Teacher newT = new Teacher(IDgenerator.getNewId(), NameValidator.formatName(name), age);
+                        TeacherRepo.addElement(newT);
+                        System.out.println("\nThe provided teacher is added to our system.");
+                        break;
+                    } else {
+                        System.out.println("Entered age is out of range. Try again.");
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. You have to enter a valid number. Try again.");
+                    sc.nextLine();
+                }
+            }
         } else {
             System.out.println("Name: " + name + " is not valid. Please try again.\n");
             addTeacher();
         }
-
     }
 
     public void removeTeacher() {
@@ -141,12 +163,20 @@ public class Admin extends User {
         CourseRepo.displayElements();
     }
 
-    public void getStudentsGreaterThanGrade(){
+    public void getStudentsGreaterThanGrade() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("\nEnter the number N:");
         double n = scanner.nextDouble();
         scanner.nextLine();
         StudentRepo.getStudentsGreaterThanGrade(n);
+    }
+
+    public void coursesNoTeachers() {
+        for (Course course : CourseRepo.getAllCourses().values()) {
+            if (course.getTeachers() == null || course.getTeachers().isEmpty()) {
+                course.printDetails();
+            }
+        }
     }
 
     public void callAdditionalOptions() {
@@ -159,6 +189,7 @@ public class Admin extends User {
             System.out.println("3 > Update your age");
             System.out.println("4 > Update your password");
             System.out.println("5 > Students with grades > N");
+            System.out.println("6 > Courses with no specializing teachers");
             System.out.println("0 > Go back");
             user_ip = scanner.nextInt();
             scanner.nextLine();
@@ -170,18 +201,20 @@ public class Admin extends User {
                     break;
                 case 2:
                     this.updateName();
+                    IpOp.saveAdminToFile(this, password);
                     break;
                 case 3:
-                    System.out.println("Enter new age:");
-                    int age = scanner.nextInt();
-                    scanner.nextLine();
-                    this.setAge(age);
+                    this.updateAge();
+                    IpOp.saveAdminToFile(this, password);
                     break;
                 case 4:
                     this.updatePassword();
                     break;
                 case 5:
                     this.getStudentsGreaterThanGrade();
+                    break;
+                case 6:
+                    this.coursesNoTeachers();
                     break;
                 case 0:
                     System.out.println("Going back to the previous menu...");

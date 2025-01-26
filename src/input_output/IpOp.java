@@ -18,7 +18,8 @@ public class IpOp {
     private static final String students_file_path = "src/input_output/files/students.json";
     private static final String teachers_file_path = "src/input_output/files/teachers.csv";
     private static final String courses_file_path = "src/input_output/files/courses.csv";
-    private static final String utils_file_path = "src/input_output/files/utils.json";
+
+    private static long maxId = 0;
 
     private IpOp() {
     }
@@ -29,13 +30,11 @@ public class IpOp {
             File f2 = new File(students_file_path);
             File f3 = new File(teachers_file_path);
             File f4 = new File(courses_file_path);
-            File f5 = new File(utils_file_path);
 
             f1.createNewFile();
             f2.createNewFile();
             f3.createNewFile();
             f4.createNewFile();
-            f5.createNewFile();
         } catch (IOException e) {
             System.out.println("An error occurred: " + e.getMessage());
         }
@@ -44,15 +43,14 @@ public class IpOp {
     public static void allReadIns() {
         creatingFiles();
 
-        readMaxIdFromFile();
         readAdminFromFile();
         readCoursesFromFile();
         readStudentsFromFile();
         readTeachersFromFile();
+        calcAndSetMaxId();
     }
 
     public static void allWrites() {
-        saveMaxIdToFile();
         saveCoursesToFile(CourseRepo.getAllCourses());
         saveStudentsToFile(StudentRepo.getAllStudents());
         saveTeachersToFile(TeacherRepo.getAllTeachers());
@@ -156,48 +154,48 @@ public class IpOp {
         }
     }
 
-    private static void saveMaxIdToFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(utils_file_path))) {
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                content.append(line);
-            }
-
-            JSONObject jsonObject = content.isEmpty() ? new JSONObject() : new JSONObject(new JSONTokener(content.toString()));
-            jsonObject.put("maxId", IDgenerator.getId());
-
-            try (FileWriter fileWriter = new FileWriter(utils_file_path)) {
-                fileWriter.write(jsonObject.toString(4));
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
-        } catch (org.json.JSONException e) {
-            System.out.println("Invalid JSON format: " + e.getMessage());
-        }
-    }
-
-    private static void readMaxIdFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(utils_file_path))) {
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                content.append(line);
-            }
-
-            if (!content.isEmpty()) {
-                JSONObject jsonObject = new JSONObject(new JSONTokener(content.toString()));
-                Number maxIdValue = (Number) jsonObject.get("maxId");
-                if (maxIdValue != null) {
-                    IDgenerator.setId(maxIdValue.longValue());
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
-        } catch (org.json.JSONException e) {
-            System.out.println("Invalid JSON format: " + e.getMessage());
-        }
-    }
+//    private static void saveMaxIdToFile() {
+//        try (BufferedReader br = new BufferedReader(new FileReader(utils_file_path))) {
+//            StringBuilder content = new StringBuilder();
+//            String line;
+//            while ((line = br.readLine()) != null) {
+//                content.append(line);
+//            }
+//
+//            JSONObject jsonObject = content.isEmpty() ? new JSONObject() : new JSONObject(new JSONTokener(content.toString()));
+//            jsonObject.put("maxId", IDgenerator.getId());
+//
+//            try (FileWriter fileWriter = new FileWriter(utils_file_path)) {
+//                fileWriter.write(jsonObject.toString(4));
+//            }
+//        } catch (IOException e) {
+//            System.out.println("An error occurred: " + e.getMessage());
+//        } catch (org.json.JSONException e) {
+//            System.out.println("Invalid JSON format: " + e.getMessage());
+//        }
+//    }
+//
+//    private static void readMaxIdFromFile() {
+//        try (BufferedReader br = new BufferedReader(new FileReader(utils_file_path))) {
+//            StringBuilder content = new StringBuilder();
+//            String line;
+//            while ((line = br.readLine()) != null) {
+//                content.append(line);
+//            }
+//
+//            if (!content.isEmpty()) {
+//                JSONObject jsonObject = new JSONObject(new JSONTokener(content.toString()));
+//                Number maxIdValue = (Number) jsonObject.get("maxId");
+//                if (maxIdValue != null) {
+//                    IDgenerator.setId(maxIdValue.longValue());
+//                }
+//            }
+//        } catch (IOException e) {
+//            System.out.println("An error occurred: " + e.getMessage());
+//        } catch (org.json.JSONException e) {
+//            System.out.println("Invalid JSON format: " + e.getMessage());
+//        }
+//    }
 
     private static void readAdminFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(admin_file_path))) {
@@ -205,6 +203,10 @@ public class IpOp {
             br.readLine();
 
             while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+
                 String[] adminData = line.split(",");
                 long id = Long.parseLong(adminData[0]);
                 String name = adminData[1];
@@ -212,6 +214,7 @@ public class IpOp {
                 String password = adminData[3];
 
                 Admin.getInstance(id, name, age, password);
+                maxId = Math.max(maxId, id);
             }
 
         } catch (IOException e) {
@@ -249,8 +252,10 @@ public class IpOp {
                     while (keys.hasNext()) {
                         Long courseCode = Long.valueOf(keys.next());
                         double grade = grades.getDouble(String.valueOf(courseCode));
-                        temp.updateGrades(courseCode,grade);
+                        temp.updateGrades(courseCode, grade);
                     }
+
+                    maxId = Math.max(maxId, id);
                 }
             }
         } catch (IOException e) {
@@ -266,6 +271,10 @@ public class IpOp {
             br.readLine();
 
             while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+
                 String[] teacherData = line.split(",");
                 long id = Long.parseLong(teacherData[0]);
                 String name = teacherData[1];
@@ -279,6 +288,7 @@ public class IpOp {
                 Teacher temp = new Teacher(id, name, age);
                 courseMap(temp, courses);
                 TeacherRepo.addElement(temp);
+                maxId = Math.max(maxId, id);
             }
 
         } catch (IOException e) {
@@ -292,6 +302,10 @@ public class IpOp {
             br.readLine();
 
             while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+
                 String[] courseData = line.split(",");
                 long code = Long.parseLong(courseData[0]);
                 String name = courseData[1];
@@ -316,5 +330,9 @@ public class IpOp {
                 Relationships.teacherCourse((Teacher) user, course);
             }
         }
+    }
+
+    private static void calcAndSetMaxId() {
+        IDgenerator.setId(maxId);
     }
 }

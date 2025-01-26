@@ -52,6 +52,8 @@ public class TeacherRepo {
             AtomicInteger counter = new AtomicInteger(1);
             allTeachers
                     .values()
+                    .stream()
+                    .sorted((a, b) -> Math.toIntExact(a.getId() - b.getId()))
                     .forEach(t -> {
                         System.out.println("------------------- " + counter.get() + " ------------------- ");
                         t.printDetails();

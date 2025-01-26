@@ -47,6 +47,8 @@ public class CourseRepo {
             AtomicInteger counter = new AtomicInteger(1);
             allCourses
                     .values()
+                    .stream()
+                    .sorted((a, b) -> Math.toIntExact(a.getCode() - b.getCode()))
                     .forEach(c -> {
                         System.out.println("------------------- " + counter.get() + " ------------------- ");
                         c.printDetails();

@@ -68,6 +68,8 @@ public class StudentRepo {
             AtomicInteger counter = new AtomicInteger(1);
             allStudents
                     .values()
+                    .stream()
+                    .sorted((a, b) -> Math.toIntExact(a.getId() - b.getId()))
                     .forEach(s -> {
                         System.out.println("------------------- " + counter.get() + " ------------------- ");
                         s.printDetails();

@@ -3,15 +3,66 @@
         "name": "Student One",
         "id": 2,
         "grades": {
-            "100": -1,
+            "100": 8.7,
             "200": 9
         },
         "age": 13
     },
     {
-        "name": "Student Two",
-        "id": 3,
+        "name": "Student Eleven",
+        "id": 21,
         "grades": {},
-        "age": 10
+        "age": 7
+    },
+    {
+        "name": "Student Three",
+        "id": 7,
+        "grades": {"500": -1},
+        "age": 8
+    },
+    {
+        "name": "Student Four",
+        "id": 8,
+        "grades": {
+            "800": -1,
+            "900": 7.4
+        },
+        "age": 14
+    },
+    {
+        "name": "Student Five",
+        "id": 10,
+        "grades": {},
+        "age": 14
+    },
+    {
+        "name": "Student Six",
+        "id": 11,
+        "grades": {},
+        "age": 14
+    },
+    {
+        "name": "Student Seven",
+        "id": 12,
+        "grades": {},
+        "age": 14
+    },
+    {
+        "name": "Student Eight",
+        "id": 13,
+        "grades": {"700": 8.7},
+        "age": 14
+    },
+    {
+        "name": "Student Nine",
+        "id": 14,
+        "grades": {},
+        "age": 14
+    },
+    {
+        "name": "Student Ten",
+        "id": 15,
+        "grades": {},
+        "age": 14
     }
 ]

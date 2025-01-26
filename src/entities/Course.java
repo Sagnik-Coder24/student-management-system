@@ -96,7 +96,8 @@ public class Course {
         }
     }
 
-    public void printDetails() {
+    public void
+    printDetails() {
         System.out.println("Course CODE: " + getCode());
         System.out.println("Name: " + getName());
         System.out.println("Teachers specializing in this course:");

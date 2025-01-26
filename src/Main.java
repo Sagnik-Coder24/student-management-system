@@ -7,6 +7,7 @@ import utility.IDgenerator;
 import utility.NameValidator;
 import utility.Relationships;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -39,10 +40,7 @@ public class Main {
                         student.updateName();
                         break;
                     case 3:
-                        System.out.println("Enter new age:");
-                        int age = scanner.nextInt();
-                        scanner.nextLine();
-                        student.setAge(age);
+                        student.updateAge();
                         break;
                     case 4:
                         System.out.println(student.getFinalGrade() == -1 ? "All the grades not assigned for you." : student.getFinalGrade());
@@ -253,8 +251,22 @@ public class Main {
             String name = scanner.nextLine();
             if (NameValidator.isValidName(name)) {
                 System.out.println("Enter your Age:");
-                int age = scanner.nextInt();
-                scanner.nextLine();
+                int age;
+                while (true) {
+                    try {
+                        age = scanner.nextInt();
+                        scanner.nextLine();
+                        if (age > 0 && age <= 110) {
+                            break;
+                        } else {
+                            System.out.println("Entered age is out of range. Try again.");
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Invalid input. You have to enter a valid number. Try again.");
+                        scanner.nextLine();
+                    }
+                }
+
                 System.out.println("Create your Password:");
                 String pass;
 
